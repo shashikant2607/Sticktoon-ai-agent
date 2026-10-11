@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111827"><title>Sticktoons AI Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--card:#151d31;--line:#2a3650;--text:#eef2ff;--muted:#a6b1c8;--accent:#8b5cf6}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#20234a,var(--bg) 55%);color:var(--text);font:16px system-ui,sans-serif}main{max-width:850px;margin:auto;padding:24px 16px 50px}.tag{color:#c4b5fd;font-weight:700;letter-spacing:.12em;font-size:12px}h1{font-size:clamp(28px,7vw,44px);line-height:1.08;margin:10px 0}p{color:var(--muted);line-height:1.6}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.card{background:rgba(21,29,49,.94);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0}.card h2{font-size:18px;margin:0 0 10px}button,a.button{display:inline-block;border:0;border-radius:12px;padding:12px 15px;background:var(--accent);color:white;text-decoration:none;font-weight:700;cursor:pointer;margin:4px 4px 4px 0}button.secondary{background:#27334d}input,select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0c1426;color:var(--text);margin:6px 0 12px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0b1222;padding:14px;border-radius:12px;color:#e2e8f0;min-height:50px}.small{font-size:13px}footer{color:var(--muted);font-size:12px;padding-top:18px}
+</style></head><body><main>
+<div class="tag">STICKTOONS • CREATOR WORKFLOW</div><h1>AI Shorts Studio</h1><p>English AI facts and technology Shorts for a US audience.</p>
+<div class="grid">
+<section class="card"><h2>1. Service status</h2><p id="health">Checking API…</p><button class="secondary" id="check">Check again</button></section>
+<section class="card"><h2>2. Connect YouTube</h2><p>Authorize the channel for uploads. Start with private test videos.</p><a class="button" href="/api/auth">Connect YouTube</a></section>
+</div>
+<section class="card"><h2>3. Generate a Shorts script</h2><label for="topic">Topic</label><input id="topic" placeholder="e.g. 3 surprising AI facts"><label for="tone">Style</label><select id="tone"><option>curious and punchy</option><option>mysterious</option><option>simple and educational</option></select><button id="generate">Generate script</button><p class="small">Requires OPENAI_API_KEY in Vercel settings.</p><pre id="output">Your script will appear here.</pre></section>
+<section class="card"><h2>4. What remains</h2><p>Automatic voice-over, vertical video rendering, and scheduled publishing still need a configured video-generation provider and tested scheduler. Do not enable unattended uploads until tested.</p><p class="small">Keep secrets in Vercel Environment Variables, never in GitHub or public chat.</p></section>
+<footer>Starter build • Review generated content before publishing.</footer>
+</main><script>
+async function check(){let e=document.getElementById('health');e.textContent='Checking…';try{let r=await fetch('/api/health');let d=await r.json();e.textContent=d.ok?'API online • '+d.message:'API warning'}catch(err){e.textContent='Could not reach API. Check deployment status.'}}
+document.getElementById('check').onclick=check;check();
+document.getElementById('generate').onclick=async()=>{let o=document.getElementById('output');o.textContent='Generating…';try{let r=await fetch('/api/generate-script',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic:document.getElementById('topic').value,tone:document.getElementById('tone').value})});let d=await r.json();o.textContent=d.script||d.error||JSON.stringify(d,null,2)}catch(e){o.textContent='Request failed. Check deployment and OPENAI_API_KEY.'}};
+</script></body></html>
